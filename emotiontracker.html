@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mood Tracker - FeelSync</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px auto;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 500px;
+      text-align: center;
+    }
+    .mood-buttons button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .happy { background-color: #ffeb3b; }
+    .okay { background-color: #90caf9; }
+    .sad { background-color: #f48fb1; }
+
+    .sidebar {
+      height: 100vh;
+      width: 220px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #1565c0;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar .logo {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      padding: 15px 25px;
+      text-decoration: none;
+      color: white;
+      display: block;
+      transition: background 0.2s;
+    }
+
+    .sidebar a:hover {
+      background-color: #0d47a1;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="sidebar" id="sidebar">
+    <h2 class="logo">FeelSync</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="emotiontracker.html">Mood Tracker</a>
+    <a href="thoughts.html">Thoughts</a>
+    <a href="healthtask.html">Health</a>
+    <a href="login.html">Logout</a>
+  </div>
+
+  <div class="section">
+    <h2>🧠 How are you feeling today?</h2>
+    <div class="mood-buttons">
+      <button class="happy" onclick="setMood('Happy')">😊 Happy</button>
+      <button class="okay" onclick="setMood('Okay')">😐 Okay</button>
+      <button class="sad" onclick="setMood('Sad')">😢 Sad</button>
+    </div>
+    <p id="taskMessage" style="margin-top: 20px; font-size: 1.2em; color: #333;"></p>
+  </div>
+
+  <script>
+    function setMood(mood) {
+      const tasks = {
+        Happy: [
+          "Spread joy — text a kind message to a friend.",
+          "Go outside and enjoy the weather!",
+          "Capture your smile in a selfie!"
+        ],
+        Okay: [
+          "Stretch for 2 minutes and take 5 deep breaths.",
+          "Write down one thing you’re grateful for.",
+          "Go for a quick walk to boost your mood."
+        ],
+        Sad: [
+          "Listen to your favorite calming music.",
+          "Take a 5-minute break from screens.",
+          "Write out your thoughts in a journal."
+        ]
+      };
+
+      const options = tasks[mood];
+      const randomTask = options[Math.floor(Math.random() * options.length)];
+      document.getElementById("taskMessage").textContent = `Your task: ${randomTask}`;
+    }
+  </script>
+</body>
+</html>

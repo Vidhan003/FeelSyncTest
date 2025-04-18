@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Health Tracker - FeelSync</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 20px;
+      margin: 0;
+    }
+  
+    .navbar {
+      background: #1976d2;
+      padding: 15px;
+      color: white;
+      font-size: 20px;
+    }
+  
+    .nav-link {
+      margin-right: 15px;
+      color: white;
+      text-decoration: none;
+    }
+  
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  
+    h2 {
+      color: #1976d2;
+    }
+  
+    label {
+      display: block;
+      margin-bottom: 12px;
+    }
+  
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+  
+    .popup {
+      display: none;
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #4caf50;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+  
+    .sidebar {
+      height: 100vh;
+      width: 220px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #1565c0;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .sidebar .logo {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+  
+    .sidebar a {
+      padding: 15px 25px;
+      text-decoration: none;
+      color: white;
+      display: block;
+      transition: background 0.2s;
+    }
+  
+    .sidebar a:hover {
+      background-color: #0d47a1;
+    }
+  
+    #custom-timer-section {
+      margin-top: 50px;
+      padding: 20px;
+      border: 2px dashed #1976d2;
+      border-radius: 10px;
+      text-align: center;
+    }
+  
+    #custom-timer {
+      font-size: 2em;
+      margin: 15px 0;
+      color: #333;
+    }
+  
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      font-size: 1em;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  
+    button:hover {
+      background: #0d47a1;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="sidebar" id="sidebar">
+    <h2 class="logo">FeelSync</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="emotiontracker.html">Mood Tracker</a>
+    <a href="thoughts.html">Thoughts</a>
+    <a href="healthtask.html">Health</a>
+    <a href="login.html">Logout</a>
+  </div>
+
+  <div class="container">
+    <h2>🩺 Daily Health Tasks</h2>
+    <label><input type="checkbox" class="health-task" data-task="screenBreak"> Took a screen break</label>
+    <label><input type="checkbox" class="health-task" data-task="exercise"> Did some exercise</label>
+    <label><input type="checkbox" class="health-task" data-task="walk"> Went for a walk</label>
+    <label><input type="checkbox" class="health-task" data-task="water"> Drank enough water</label>
+    <label><input type="checkbox" class="health-task" data-task="meals"> Ate meals on time</label>
+    <label><input type="checkbox" class="health-task" data-task="journal"> Wrote thoughts in journal</label>
+
+    <!-- Focus Timer Section -->
+    <div id="custom-timer-section">
+      <h2>⏳ Focus Timer</h2>
+      <div>
+        <button onclick="setTime(5)">5 min</button>
+        <button onclick="setTime(10)">10 min</button>
+        <button onclick="setTime(20)">20 min</button>
+      </div>
+      <div id="custom-timer">00:00</div>
+      <button onclick="startTimer()">Start</button>
+      <button onclick="pauseTimer()">Pause</button>
+      <button onclick="stopTimer()">Stop</button>
+    </div>
+  </div>
+
+  <div id="popup" class="popup">🎉 Great job! You completed a task!</div>
+
+  <script>
+    const popup = document.getElementById("popup");
+    const checkboxes = document.querySelectorAll(".health-task");
+
+    // Save to localStorage on change
+    checkboxes.forEach(cb => {
+      cb.addEventListener("change", () => {
+        const taskKey = "task_" + cb.dataset.task;
+        localStorage.setItem(taskKey, cb.checked);
+        if (cb.checked) {
+          popup.style.display = "block";
+          setTimeout(() => {
+            popup.style.display = "none";
+          }, 2000);
+        }
+      });
+    });
+
+    // Load saved states
+    window.onload = () => {
+      checkboxes.forEach(cb => {
+        const taskKey = "task_" + cb.dataset.task;
+        const saved = localStorage.getItem(taskKey);
+        if (saved === "true") cb.checked = true;
+      });
+    };
+
+    // Timer functions remain same
+    let timerDuration = 0;
+    let timerInterval;
+    let remainingSeconds = 0;
+
+    function setTime(minutes) {
+      timerDuration = minutes * 60;
+      remainingSeconds = timerDuration;
+      displayTime(remainingSeconds);
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
+          displayTime(remainingSeconds);
+        } else {
+          clearInterval(timerInterval);
+          alert("⏰ Time's up! Great work!");
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      remainingSeconds = 0;
+      displayTime(remainingSeconds);
+    }
+
+    function displayTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      document.getElementById("custom-timer").textContent =
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+  </script>
+</body>
+</html>
