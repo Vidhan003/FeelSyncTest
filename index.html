@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to FeelSync</title>
+  <link rel="icon" type="image/x-icon" href="FeelSyncLogo (2)-modified.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0fdf4;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+      opacity: 1;
+      transition: opacity 1s ease-out;
+    }
+    .quote {
+      font-size: 1.5em;
+      margin: 20px 0;
+      font-style: italic;
+      color: #2e7d32;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.3s ease;
+    }
+    button:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>🌟 Welcome to FeelSync</h1>
+  <div class="quote" id="quote">Fetching today's quote...</div>
+ 
+  <button onclick="startApp()">Let’s Begin</button>
+
+  <script>
+    fetch("https://type.fit/api/quotes?" + new Date().getTime())
+      .then(res => res.json())
+      .then(data => {
+        const random = Math.floor(Math.random() * data.length);
+        document.getElementById("quote").innerHTML = `"${data[random].text}" <br> - Today's Quote`;
+      })
+      .catch(() => {
+        document.getElementById("quote").innerHTML = `"Stay strong. You're doing great!" <br> - Today's Quote`;
+      });
+
+    function startApp() {
+      
+      document.body.style.opacity = 0;
+
+      setTimeout(() => {
+        
+        window.location.href = 'dashboard.html';
+      }, 1000); 
+    }
+  </script>
+</body>
+</html>
